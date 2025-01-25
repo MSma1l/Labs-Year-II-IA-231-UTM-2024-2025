@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <limits.h>
+#include <string.h>
+
+#define V 6
+
+bool bfs(int rGraph[V][V], int s, int t, int parent[]) {
+    bool visited[V];
+    memset(visited, 0, sizeof(visited));
+
+    int queue[V], front = -1, rear = -1;
+    queue[++rear] = s;
+    visited[s] = true;
+    parent[s] = -1;
+
+    while (front != rear) {
+        int u = queue[++front];
+        for (int v = 0; v < V; v++) {
+            if (!visited[v] && rGraph[u][v] > 0) {
+                if (v == t) {
+                    parent[v] = u;
+                    return true;
+                }
+                queue[++rear] = v;
+                parent[v] = u;
+                visited[v] = true;
+            }
+        }
+    }
+    return false;
+}
+
+int fordFulkerson(int graph[V][V], int s, int t) {
+    int u, v;
+    int rGraph[V][V];
+    for (u = 0; u < V; u++)
+        for (v = 0; v < V; v++)
+            rGraph[u][v] = graph[u][v];
+
+    int parent[V];
+    int max_flow = 0;
+
+    while (bfs(rGraph, s, t, parent)) {
+        int path_flow = INT_MAX;
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            path_flow = path_flow < rGraph[u][v] ? path_flow : rGraph[u][v];
+        }
+
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            rGraph[u][v] -= path_flow;
+            rGraph[v][u] += path_flow;
+        }
+
+        max_flow += path_flow;
+    }
+
+    return max_flow;
+}
+
+int main() {
+    int graph[V][V];
+
+    printf("Introduceti matricea grafului:\n");
+    for (int i = 0; i < V; i++) {
+        printf("Randul %d: ", i + 1);
+        for (int j = 0; j < V; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    int source, sink;
+    printf("Introduceti nodul de start si cel final: ");
+    scanf("%d %d", &source, &sink);
+
+    printf("Fluxul maxim posibil este: %d", fordFulkerson(graph, source, sink));
+
+    return 0;
+}

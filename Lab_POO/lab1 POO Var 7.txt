@@ -1,0 +1,211 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+
+using namespace std;
+
+struct Monitor {
+    char* firmaProducatoare;
+    float dimensiuniInch;
+    int numarCulori;
+    string rezolutie; 
+};
+
+void setareDate(Monitor& monitor, const char* firma, float dimensiune, int culori, const string& rez) {
+    monitor.firmaProducatoare = new char[strlen(firma) + 1]; 
+    strcpy(monitor.firmaProducatoare, firma);
+
+    monitor.dimensiuniInch = dimensiune;
+    monitor.numarCulori = culori;
+    monitor.rezolutie = rez;
+}
+
+void modificareDate(Monitor& monitor, const char* firma, float dimensiune, int culori, const string& rez) {
+    delete[] monitor.firmaProducatoare;
+    monitor.firmaProducatoare = new char[strlen(firma) + 1];
+    strcpy(monitor.firmaProducatoare, firma);
+
+    monitor.dimensiuniInch = dimensiune;
+    monitor.numarCulori = culori;
+    monitor.rezolutie = rez; 
+}
+
+bool compara(const Monitor& monitor, const Monitor& altMonitor) {
+    return (monitor.dimensiuniInch == altMonitor.dimensiuniInch && 
+            monitor.numarCulori == altMonitor.numarCulori && 
+            monitor.rezolutie == altMonitor.rezolutie); 
+}
+
+void elibereazaMemoria(Monitor& monitor) {
+    delete[] monitor.firmaProducatoare;
+}
+
+int main() {
+
+    Monitor monitor1, monitor2;
+
+    // Setare date pentru monitor1 și monitor2
+    setareDate(monitor1, "Dell", 24.5, 16700000, "1920x1080");
+    setareDate(monitor2, "HP", 27.0, 16700000, "2560x1440");
+
+    if (compara(monitor1, monitor2)) {
+        cout << "Monitoarele sunt identice" << endl;
+    } else {
+        cout << "Monitoarele difera" << endl;
+    }
+
+    // Citirea noilor date de la tastatură pentru modificarea monitorului 2
+    char firma[50];
+    float dimensiune;
+    int culori;
+    string rezolutie;
+
+    cout << "Introduceti noua firma producatoare: ";
+    cin >> firma;
+    cout << "Introduceti noua dimensiune in inch: ";
+    cin >> dimensiune;
+    cout << "Introduceti noul numar de culori: ";
+    cin >> culori;
+    cout << "Introduceti noua rezolutie: ";
+    cin >> rezolutie;
+
+    // Modificare monitor2 cu datele introduse de utilizator
+    modificareDate(monitor2, firma, dimensiune, culori, rezolutie);
+
+    if (compara(monitor1, monitor2)) {
+        cout << "Monitoarele sunt identice" << endl;
+    } else {
+        cout << "Monitoarele difera" << endl;
+    }
+
+    // Eliberare memorie alocată
+    elibereazaMemoria(monitor1);
+    elibereazaMemoria(monitor2);
+
+    return 0;
+}
+
+
+
+
+
+
+#include <iostream>
+#include <cstring>  // pentru funcții de manipulare a string-urilor (ex: memcpy)
+#include <cstdlib>  // pentru funcția rand()
+#include <ctime>    // pentru srand(time(0))
+#include <algorithm>  // pentru std::min
+
+using namespace std;
+
+// Structura care definește un vector de numere întregi
+struct Vector {
+    int* elements;  // pointer către elementele vectorului
+    int count;      // numărul de elemente din vector
+
+    // Funcția de inițializare a vectorului cu dimensiunea specificată
+    void init(int dimensiune) {
+        count = dimensiune;
+        elements = new int[count];  // alocăm memoria pentru vector
+    }
+
+    // Funcția de eliberare a memoriei pentru vector
+    void freememor() {
+        delete[] elements;  // eliberăm memoria alocată dinamic
+        elements = nullptr;
+        count = 0;
+    }
+
+    // Funcția de modificare a dimensiunii vectorului
+    void moddimensiune(int newcount) {
+        int* newElements = new int[newcount];  // alocăm un nou vector
+        // Copiem vechile elemente (în limita dimensiunii minime)
+        memcpy(newElements, elements, min(count, newcount) * sizeof(int));
+        delete[] elements;  // eliberăm vechiul vector
+        elements = newElements;
+        count = newcount;
+    }
+
+    // Funcția de accesare a unui element din vector
+    int& at(int index) {
+        if (index < 0 || index >= count) {
+            throw out_of_range("Index out of bounds");
+        }
+        return elements[index];
+    }
+
+    // Funcția de calculare a produsului elementelor negative din vector
+    int produsElementeNegative() {
+        int produs = 1;
+        bool hasNegatives = false;
+        for (int i = 0; i < count; i++) {
+            if (elements[i] < 0) {
+                produs *= elements[i];
+                hasNegatives = true;
+            }
+        }
+        return hasNegatives ? produs : 0;  // returnează 0 dacă nu sunt elemente negative
+    }
+};
+
+// Funcția de înmulțire a doi vectori element cu element
+void inmultireVectori(const Vector& v1, const Vector& v2, Vector& rezultat) {
+    if (v1.count != v2.count) {
+        cout << "Dimensiunile vectorilor nu sunt egale!" << endl;
+        return;
+    }
+    rezultat.init(v1.count);  // inițializăm vectorul rezultat cu dimensiunea potrivită
+    for (int i = 0; i < v1.count; i++) {
+        rezultat.elements[i] = v1.elements[i] * v2.elements[i];  // înmulțire element cu element
+    }
+}
+
+int main() {
+    srand(time(0));  // inițializare generator de numere aleatoare
+
+    // Creăm și inițializăm doi vectori
+    Vector vector1, vector2, rezultat;
+    int dimensiune;
+    cout << "Dimensiunea vectorilor: ";
+    cin >> dimensiune;
+
+    vector1.init(dimensiune);
+    vector2.init(dimensiune);
+
+    // Populăm vectorii cu valori aleatoare între -10 și 10
+    cout << "Vector 1: ";
+    for (int i = 0; i < dimensiune; i++) {
+        vector1.elements[i] = rand() % 21 - 10;  // valori între -10 și 10
+        cout << vector1.elements[i] << " ";  // afișăm valorile
+    }
+    cout << endl;
+
+    cout << "Vector 2: ";
+    for (int i = 0; i < dimensiune; i++) {
+        vector2.elements[i] = rand() % 21 - 10;  // valori între -10 și 10
+        cout << vector2.elements[i] << " ";  // afișăm valorile
+    }
+    cout << endl;
+
+    // Înmulțim vectorii element cu element și stocăm rezultatul în 'rezultat'
+    inmultireVectori(vector1, vector2, rezultat);
+
+    // Afișăm rezultatul înmulțirii
+    cout << "Rezultatul înmulțirii: ";
+    for (int i = 0; i < dimensiune; i++) {
+        cout << rezultat.elements[i] << " ";  // afișăm valorile din vectorul rezultat
+    }
+    cout << endl;
+
+    // Calculăm și afișăm produsul elementelor negative din vector1
+    int produsNegativi = vector1.produsElementeNegative();
+    cout << "Produsul elementelor negative din Vector 1: " << produsNegativi << endl;
+
+    // Eliberăm memoria alocată pentru vectori
+    vector1.freememor();
+    vector2.freememor();
+    rezultat.freememor();
+
+    return 0;
+}
+

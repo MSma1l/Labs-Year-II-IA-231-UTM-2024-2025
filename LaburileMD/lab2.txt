@@ -1,0 +1,112 @@
+#include <stdio.h>
+
+#define MAX_VERTICES 100
+
+int adjacencyMatrix[MAX_VERTICES][MAX_VERTICES];
+int visited[MAX_VERTICES];
+int numVertices;
+
+// Functie pentru adaugarea unei muchii in graf
+void addEdge(int start, int end) {
+    adjacencyMatrix[start][end] = 1;
+    adjacencyMatrix[end][start] = 1;
+}
+
+// Functie pentru parcurgerea in adancime a unui nod
+void DFS(int vertex) {
+    visited[vertex] = 1;
+    printf("%d ", vertex);
+
+    for (int i = 0; i < numVertices; i++) {
+        if (adjacencyMatrix[vertex][i] && !visited[i]) {
+            DFS(i);
+        }
+    }
+}
+
+// Functie pentru parcurgerea in adancime a grafului
+void depthFirstSearch() {
+    printf("Parcurgerea in adancime a grafului: ");
+    for (int i = 0; i < numVertices; i++) {
+        visited[i] = 0;
+    }
+
+    for (int i = 0; i < numVertices; i++) {
+        if (!visited[i]) {
+            DFS(i);
+        }
+    }
+
+    printf("\n");
+}
+
+// Functie pentru afisarea matricei adiacente
+void displayMatrix() {
+    printf("Matricea adiacentei:\n");
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            printf("%d ", adjacencyMatrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Functie pentru afisarea meniului
+void displayMenu() {
+    printf("\n1. Introducere graf");
+    printf("\n2. Parcurgere graf in adancime");
+    printf("\n3. Afisare matrice adiacenta");
+    printf("\n0. Iesire");
+    printf("\nAlegeti optiunea: ");
+}
+
+int main() {
+    int option, start, end;
+
+    do {
+        displayMenu();
+        scanf("%d", &option);
+
+        switch (option) {
+            case 1:
+                // Introducere graf
+                printf("\nIntroduceti numarul de noduri in graf: ");
+                scanf("%d", &numVertices);
+                // Inițializare matrice adiacentă
+                for (int i = 0; i < numVertices; i++) {
+                    for (int j = 0; j < numVertices; j++) {
+                        adjacencyMatrix[i][j] = 0;
+                    }
+                }
+                // Adăugare muchii
+                printf("\nIntroduceti muchiile (perechi de noduri separate prin spatii, -1 pentru a opri): ");
+                while (1) {
+                    scanf("%d %d", &start, &end);
+                    if (start == -1 || end == -1) {
+                        break;
+                    }
+                    addEdge(start, end);
+                }
+                break;
+
+            case 2:
+                // Parcurgere graf in adancime
+                depthFirstSearch();
+                break;
+
+            case 3:
+                // Afisare matrice adiacenta
+                displayMatrix();
+                break;
+
+            case 0:
+                printf("\nProgramul se inchide.");
+                break;
+
+            default:
+                printf("\nOptiune invalida! Va rugam sa alegeti din nou.");
+        }
+    } while (option != 0);
+
+    return 0;
+}

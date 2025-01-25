@@ -1,0 +1,191 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_VERTICES 100
+
+// Structura pentru un nod în listă de adiacență
+struct Node {
+    int vertex;
+    struct Node* next;
+};
+
+// Structura pentru o listă de adiacență
+struct AdjList {
+    struct Node* head;
+};
+
+// Structura pentru graf
+struct Graph {
+    int numVertices;
+    struct AdjList* array;
+};
+
+// Prototipuri funcții
+struct Node* createNode(int vertex);
+struct Graph* createGraph(int numVertices);
+void addEdge(struct Graph* graph, int start, int end);
+void breadthFirstSearch(struct Graph* graph, int startVertex);
+void displayMenu();
+
+int main() {
+    int option, start, end;
+    struct Graph* graph = NULL;
+
+    do {
+        displayMenu();
+        scanf("%d", &option);
+
+        switch (option) {
+            case 1:
+                // Introducere grafului în memorie
+                printf("Introduceti numarul de noduri in graf: ");
+                scanf("%d", &end);
+                graph = createGraph(end);
+                printf("Introduceti muchiile (perechi de noduri separate prin spatii, -1 pentru a opri): ");
+                while (1) {
+                    scanf("%d %d", &start, &end);
+                    if (start == -1 || end == -1) {
+                        break;
+                    }
+                    addEdge(graph, start, end);
+                }
+                break;
+
+            case 2:
+                // Parcurgere graf în lățime
+                if (graph == NULL) {
+                    printf("Graful nu a fost introdus inca. Va rugam sa introduceti graful.\n");
+                } else {
+                    printf("Introduceti nodul de start pentru parcurgerea in latime: ");
+                    scanf("%d", &start);
+                    breadthFirstSearch(graph, start);
+                }
+                break;
+
+            case 3:
+    // Vizualizare rezultate
+    if (graph == NULL) {
+        printf("Graful nu a fost introdus inca. Va rugam sa introduceti graful.\n");
+    } else {
+        printf("Parcurgerea in latime a grafului este: \n");
+        for (int i = 1; i <= graph->numVertices; ++i) {
+            printf("Nodul %d: ", i);
+            struct Node* temp = graph->array[i].head;
+            while (temp != NULL) {
+                printf("%d ", temp->vertex);
+                temp = temp->next;
+            }
+            printf("\n");
+        }
+    }
+    break;
+
+
+            case 0:
+                printf("Programul se inchide.\n");
+                break;
+
+            default:
+                printf("Optiune invalida! Va rugam sa alegeti din nou.\n");
+        }
+    } while (option != 0);
+
+    // Eliberare memorie alocată pentru graf
+    if (graph != NULL) {
+        for (int i = 1; i <= graph->numVertices; ++i) {
+            struct Node* current = graph->array[i].head;
+            while (current != NULL) {
+                struct Node* temp = current;
+                current = current->next;
+                free(temp);
+            }
+        }
+        free(graph->array);
+        free(graph);
+    }
+
+    return 0;
+}
+
+// Creare nod în listă de adiacență
+struct Node* createNode(int vertex) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->vertex = vertex;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Creare graf cu un număr specific de noduri
+struct Graph* createGraph(int numVertices) {
+    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    graph->numVertices = numVertices;
+    graph->array = (struct AdjList*)malloc(numVertices * sizeof(struct AdjList));
+
+    for (int i = 0; i < numVertices; ++i) {
+        graph->array[i].head = NULL;
+    }
+
+    return graph;
+}
+
+// Adăugare muchie în graf
+void addEdge(struct Graph* graph, int start, int end) {
+    struct Node* newNode = createNode(end);
+    newNode->next = graph->array[start].head;
+    graph->array[start].head = newNode;
+
+    // Dacă graful este neorientat, trebuie să adăugăm și muchia în sens invers
+    newNode = createNode(start);
+    newNode->next = graph->array[end].head;
+    graph->array[end].head = newNode;
+}
+
+// Parcurgere în lățime a grafului
+void breadthFirstSearch(struct Graph* graph, int startVertex) {
+    int* visited = (int*)malloc(graph->numVertices * sizeof(int));
+    for (int i = 1; i <= graph->numVertices; ++i) {
+        visited[i] = 0;
+    }
+
+    // Coada pentru BFS
+    int* queue = (int*)malloc(graph->numVertices * sizeof(int));
+    int front = -1, rear = -1;
+
+    // Adăugăm nodul de start în coadă și îl marcam ca vizitat
+    queue[++rear] = startVertex;
+    visited[startVertex] = 1;
+
+    printf("Rezultatele parcurgerii in latime: ");
+
+    while (front != rear) {
+        int currentVertex = queue[++front];
+        printf("%d ", currentVertex);
+
+        // Parcurgem vecinii nodului curent
+        struct Node* temp = graph->array[currentVertex].head;
+        while (temp != NULL) {
+            int adjVertex = temp->vertex;
+            if (!visited[adjVertex]) {
+                queue[++rear] = adjVertex;
+                visited[adjVertex] = 1;
+            }
+            temp = temp->next;
+        }
+    }
+
+    printf("\n");
+
+    // Eliberare memorie
+    free(visited);
+    free(queue);
+}
+
+// Afișarea meniului
+void displayMenu() {
+    printf("\n--------Lista de optiuni--------\n"
+           "1. Introducere grafului in memoria calculator\n"
+           "2. Parcurgere grafului in latime\n"
+           "3. Vizualizare rezultatelor la display\n"
+           "0. Iesire din program\n"
+           "Alegeti optiunea: ");
+}

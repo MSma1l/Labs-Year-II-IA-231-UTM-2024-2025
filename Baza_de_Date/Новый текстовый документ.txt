@@ -1,0 +1,52 @@
+tabelul 1 id_Istructor
+ nume prenume indp data_nasterei id_sexul numar_telefon id_masine 
+
+tabela 2Angajati 
+nume prenume indp data_nasterei id_sexul numar_telefon id_functia
+
+tabema3 Functie (id_functia)
+instructor examenator contabil director secretar <-(valorile)
+
+tabelul 4 id_masine
+ macra modelul anul   id_cutie
+
+tabelul 5 id_studentii
+ nume prenume idnp data_nasterei id_sexul id_categoria numar_telefon id_instructor
+
+tabelul 6 plati
+id_student suma data_platii tip_plata 
+
+tabelul 7 programari
+id_Student id_instructor id_masine data_programarii Id_status
+
+tabela 8 evaluari
+id_student id_instructor tip_evaluare id_EX  data_evaluarii punctaj 
+
+tabela 9 instructori  
+id_instructor id_ziua id_interval
+
+
+tabela 10 categorii (id_categorie)(categorie)
+AM A1 A2 A B1 B C1 C D1 D BE C1E CE D1E DE F M <-(valori) 
+
+tabela 11 tip_evaluare
+teoretic practic
+
+tabela 12 id_ziua
+luni marti miercuri joi vineri sambata 
+
+tabela 13 id_interval
+8-9 9-10 10-11 11-12 12-13 14-15 15-16 16-17 17-18 
+
+tabela 13 Id_status
+finisat in_curs
+
+
+
+
+
+
+
+
+1.2 argument dece am ales anume ce trebuie sa aflam si de ce ea trebuie si analizand tema 
+2 colectarea informatiei care avem nevoie pentru a face aceasta baza de date aceste informatii putem lua din diferite surse relative si analiza domeniul 

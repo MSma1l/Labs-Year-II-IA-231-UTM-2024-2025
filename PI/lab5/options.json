@@ -1,0 +1,62 @@
+{
+    "plot": {
+        "period": [
+            2020,
+            2024
+        ],
+        "countries": [
+            "Saudi Arabia",
+            "United Arab Emirates",
+            "Iraq",
+            "Egypt",
+            "Qatar",
+            "Algeria",
+            "Morocco",
+            "Tunisia",
+            "Oman",
+            "Kuwait",
+            "Jordan",
+            "Lebanon",
+            "Libya",
+            "Sudan",
+            "Somalia",
+            "Yemen",
+            "Gaza",
+            "Comoros",
+            "Djibouti",
+            "Mauritania",
+            "Syria",
+            "South Sudan"
+        ]
+    },
+    "hist": {
+        "bins": 10
+    },
+    "pie": {
+        "name": "Liga Țărilor Arabe",
+        "countries": [
+            "Saudi Arabia",
+            "United Arab Emirates",
+            "Iraq",
+            "Egypt",
+            "Qatar",
+            "Algeria",
+            "Morocco",
+            "Tunisia",
+            "Oman",
+            "Kuwait",
+            "Jordan",
+            "Lebanon",
+            "Libya",
+            "Sudan",
+            "Somalia",
+            "Yemen",
+            "Gaza",
+            "Comoros",
+            "Djibouti",
+            "Mauritania",
+            "Syria",
+            "South Sudan"
+        ]
+    }
+}
